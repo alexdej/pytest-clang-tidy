@@ -42,6 +42,28 @@ FAILED src/buggy.c::CLANG_TIDY
 You can combine `--clang-tidy` with your normal test run — Python tests and
 clang-tidy items appear together in the results.
 
+## Enabling checks
+
+clang-tidy has no checks enabled by default. You need to configure which
+checks to run via `clang_tidy_args`, otherwise every file will pass without
+being analyzed. The `clang-analyzer-*` checks (Clang Static Analyzer) are
+a good starting point — they catch real bugs like null pointer dereferences,
+use-after-free, and resource leaks. See the
+[full list of checks](https://clang.llvm.org/extra/clang-tidy/checks/list.html)
+for other options.
+
+```ini
+[pytest]
+clang_tidy_args =
+    -checks=-*,clang-analyzer-*
+    --warnings-as-errors=*
+```
+
+By default, clang-tidy exits 0 even when it finds warnings. Adding
+`--warnings-as-errors=*` makes warnings fail the test. Without it, warnings
+are still surfaced as Python warnings in the pytest output (visible in the
+warnings summary).
+
 ## Configuration
 
 All options go in `pyproject.toml`, `pytest.ini`, or `setup.cfg` under `[pytest]`.
@@ -51,19 +73,6 @@ All options go in `pyproject.toml`, `pytest.ini`, or `setup.cfg` under `[pytest]
 Extra arguments forwarded to every clang-tidy invocation. This is the main
 configuration surface — use it for `-checks`, `--warnings-as-errors`, and any
 other clang-tidy flags.
-
-By default, clang-tidy exits 0 even when it finds warnings. To make warnings
-fail the test, add `--warnings-as-errors=*`. A good starting configuration:
-
-```ini
-[pytest]
-clang_tidy_args =
-    -checks=-*,clang-analyzer-*
-    --warnings-as-errors=*
-```
-
-Without `--warnings-as-errors`, warnings from clang-tidy are still surfaced
-as Python warnings in the pytest output (visible in the warnings summary).
 
 ### `clang_tidy_extensions`
 
