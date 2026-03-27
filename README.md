@@ -84,14 +84,25 @@ Useful for passing defines, include paths, or language standards.
 clang_tidy_compiler_args = -std=c11 -DNDEBUG
 ```
 
+### `clang_tidy_python_include`
+
+When set to `true`, the plugin adds `-isystem<python_include>` to the
+compiler flags, where `<python_include>` is the CPython headers directory
+from `sysconfig.get_path('include')`. This allows clang-tidy to parse files
+that `#include <Python.h>` without a `compile_commands.json`. The headers
+are added as `-isystem` (not `-I`) so that clang-tidy does not report
+warnings from CPython's own headers. Default: `false`.
+
+```ini
+[pytest]
+clang_tidy_python_include = true
+```
+
 ### `compile_commands.json`
 
 If a `compile_commands.json` file exists in your project root, clang-tidy
-will use it automatically and the plugin will not append any compiler flags.
-When no `compile_commands.json` is found, the plugin passes `--` with
-`-isystem<python_include>` (the CPython headers directory) and any
-`clang_tidy_compiler_args` so that clang-tidy can parse files that
-`#include <Python.h>`.
+will use it automatically and the plugin will not append any compiler flags
+(neither `clang_tidy_compiler_args` nor `-isystem<python_include>`).
 
 ## Markers
 

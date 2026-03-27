@@ -2,9 +2,8 @@
 
 # C source with a null pointer dereference that clang-tidy detects.
 C_ERROR = """\
-#include <stdlib.h>
 int main() {
-    int *p = NULL;
+    int *p = 0;
     *p = 42;
     return 0;
 }

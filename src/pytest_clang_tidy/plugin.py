@@ -35,6 +35,12 @@ def pytest_addoption(parser):
         default=[],
         help="extra compiler arguments passed after -- (e.g. -std=c11 -DFOO)",
     )
+    parser.addini(
+        "clang_tidy_python_include",
+        type="bool",
+        default=False,
+        help="add -isystem<python_include> to compiler flags (for C extension projects)",
+    )
 
 
 def pytest_configure(config):
@@ -97,8 +103,12 @@ class ClangTidyItem(pytest.Item):
         compiler_args = self.config.getini("clang_tidy_compiler_args")
         cmd = [CLANG_TIDY_BIN, "--quiet", "--allow-no-checks"] + args + [str(self.path)]
         if not _has_compile_commands(self.config):
-            python_include = sysconfig.get_path("include")
-            cmd += ["--", f"-isystem{python_include}"] + compiler_args
+            extra = []
+            if self.config.getini("clang_tidy_python_include"):
+                python_include = sysconfig.get_path("include")
+                extra.append(f"-isystem{python_include}")
+            if extra or compiler_args:
+                cmd += ["--"] + extra + compiler_args
         result = subprocess.run(cmd, capture_output=True, text=True)
         if result.returncode != 0:
             output = result.stdout or result.stderr
