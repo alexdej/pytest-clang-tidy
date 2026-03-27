@@ -70,6 +70,13 @@ output (visible in the warnings summary).
 
 All options go in `pyproject.toml`, `pytest.ini`, or `setup.cfg` under `[pytest]`.
 
+clang-tidy also reads settings from a `.clang-tidy` file if one exists in
+your project (or a parent directory). Options set via pytest configuration
+are applied after `.clang-tidy` and take precedence — for example,
+`clang_tidy_checks` appends to the `Checks` value from `.clang-tidy` and
+can override individual checks. In general it's recommended to use either
+`.clang-tidy` or `clang_tidy_checks` but not both.
+
 ### `clang_tidy_checks`
 
 Checks to enable. Each entry is joined with commas and passed as
