@@ -154,6 +154,26 @@ def test_cache_clear_forces_rerun(pytester):
     result.assert_outcomes(passed=1)
 
 
+def test_compiler_args_forwarded(pytester):
+    """Verify clang_tidy_compiler_args are passed after -- to the compiler."""
+    c_needs_define = """\
+#ifndef MY_FLAG
+#error "MY_FLAG not defined"
+#endif
+int main() {
+    return 0;
+}
+"""
+    pytester.makeini(
+        "[pytest]\n"
+        "clang_tidy_compiler_args = -DMY_FLAG\n"
+    )
+    pytester.makefile(".c", needs_define=c_needs_define)
+    # With -DMY_FLAG: passes
+    result = pytester.runpytest("--clang-tidy")
+    result.assert_outcomes(passed=1)
+
+
 def test_compile_commands_skips_auto_flags(pytester):
     """When compile_commands.json exists, don't append -- and compiler flags."""
     pytester.makefile(".json", compile_commands="[]")
