@@ -1,9 +1,9 @@
 # pytest-clang-tidy
 
-[![CI](https://github.com/alexdej/pytest-clang-tidy/actions/workflows/ci.yml/badge.svg)](https://github.com/alexdej/pytest-clang-tidy/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/pytest-clang-tidy)](https://pypi.org/project/pytest-clang-tidy/)
 [![Python](https://img.shields.io/pypi/pyversions/pytest-clang-tidy)](https://pypi.org/project/pytest-clang-tidy/)
 [![License](https://img.shields.io/pypi/l/pytest-clang-tidy)](https://github.com/alexdej/pytest-clang-tidy/blob/main/LICENSE)
+[![CI](https://github.com/alexdej/pytest-clang-tidy/actions/workflows/ci.yml/badge.svg)](https://github.com/alexdej/pytest-clang-tidy/actions/workflows/ci.yml)
 
 A pytest plugin that runs [clang-tidy](https://clang.llvm.org/extra/clang-tidy/) static
 analysis on C/C++ source files. Each file is collected as a test item and
