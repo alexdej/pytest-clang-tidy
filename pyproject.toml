@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pytest-clang-tidy"
+version = "0.1.0"
+description = "A pytest plugin that runs clang-tidy static analysis on C/C++ source files"
+readme = "README.md"
+license = {file = "LICENSE"}
+authors = [
+    { name = "Alex DeJarnatt", email = "adejarnatt@gmail.com" },
+]
+requires-python = ">=3.8"
+dependencies = [
+    "pytest>=7.0",
+    "clang-tidy",
+]
+classifiers = [
+    "Framework :: Pytest",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "License :: OSI Approved :: MIT License",
+]
+
+[project.urls]
+Homepage = "https://github.com/alexdej/pytest-clang-tidy"
+Repository = "https://github.com/alexdej/pytest-clang-tidy"
+
+[project.entry-points."pytest11"]
+clang-tidy = "pytest_clang_tidy.plugin"
+
+[tool.setuptools.packages.find]
+where = ["src"]
