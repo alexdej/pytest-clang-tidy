@@ -29,7 +29,7 @@ The plugin does nothing unless explicitly enabled:
 pytest --clang-tidy
 ```
 
-This collects all `.c` and `.cpp` files and runs clang-tidy on each one.
+This collects all `.c`, `.cpp`, `.cc`, and `.cxx` files and runs clang-tidy on each one.
 Files with errors fail; clean files pass.
 
 ```
@@ -67,7 +67,7 @@ as Python warnings in the pytest output (visible in the warnings summary).
 
 ### `clang_tidy_extensions`
 
-File extensions to collect. Default: `.c .cpp`.
+File extensions to collect. Default: `.c .cpp .cc .cxx`.
 
 ```ini
 [pytest]

@@ -20,8 +20,8 @@ def pytest_addoption(parser):
     parser.addini(
         "clang_tidy_extensions",
         type="args",
-        default=[".c", ".cpp"],
-        help="file extensions to collect for clang-tidy (default: .c .cpp)",
+        default=[".c", ".cpp", ".cc", ".cxx"],
+        help="file extensions to collect for clang-tidy (default: .c .cpp .cc .cxx)",
     )
     parser.addini(
         "clang_tidy_args",
