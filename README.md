@@ -97,7 +97,12 @@ a single-line format.
 ### `clang_tidy_args`
 
 Extra arguments forwarded to every clang-tidy invocation. Use it for
-`--warnings-as-errors` and any other clang-tidy flags.
+`--warnings-as-errors`, `--config-file`, and any other clang-tidy flags.
+
+```ini
+[pytest]
+clang_tidy_args = --warnings-as-errors=* --config-file=tools/clang-tidy.yml
+```
 
 ### `clang_tidy_extensions`
 
