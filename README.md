@@ -93,7 +93,7 @@ Useful for passing defines, include paths, or language standards.
 clang_tidy_compiler_args = -std=c11 -DNDEBUG
 ```
 
-### `clang_tidy_python_include`
+### `clang_tidy_include_python_headers`
 
 When set to `true`, the plugin adds `-isystem<python_include>` to the
 compiler flags, where `<python_include>` is the CPython headers directory
@@ -104,7 +104,7 @@ warnings from CPython's own headers. Default: `false`.
 
 ```ini
 [pytest]
-clang_tidy_python_include = true
+clang_tidy_include_python_headers = true
 ```
 
 ### `compile_commands.json`
