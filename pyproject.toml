@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pytest-clang-tidy"
-version = "0.2.0"
+version = "0.2.1"
 description = "A pytest plugin that runs clang-tidy static analysis on C/C++ source files"
 readme = "README.md"
 license = {file = "LICENSE"}
