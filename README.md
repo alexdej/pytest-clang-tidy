@@ -131,6 +131,12 @@ To force a full re-check:
 pytest --clang-tidy --cache-clear
 ```
 
+## Acknowledgements
+
+This plugin relies on the [clang-tidy](https://pypi.org/project/clang-tidy/)
+PyPI package, which bundles prebuilt clang-tidy binaries so that no
+system-level LLVM installation is required.
+
 ## License
 
 MIT
