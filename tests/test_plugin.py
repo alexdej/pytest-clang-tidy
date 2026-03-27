@@ -27,7 +27,8 @@ def test_clean_file_passes(pytester):
 def test_error_file_fails(pytester):
     pytester.makeini(
         "[pytest]\n"
-        "clang_tidy_args = -checks=-*,clang-analyzer-* --warnings-as-errors=*\n"
+        "clang_tidy_checks = -* clang-analyzer-*\n"
+        "clang_tidy_args = --warnings-as-errors=*\n"
     )
     pytester.makefile(".c", bad=C_ERROR)
     result = pytester.runpytest("--clang-tidy")
@@ -37,7 +38,8 @@ def test_error_file_fails(pytester):
 def test_stdout_in_failure_output(pytester):
     pytester.makeini(
         "[pytest]\n"
-        "clang_tidy_args = -checks=-*,clang-analyzer-* --warnings-as-errors=*\n"
+        "clang_tidy_checks = -* clang-analyzer-*\n"
+        "clang_tidy_args = --warnings-as-errors=*\n"
     )
     pytester.makefile(".c", bad=C_ERROR)
     result = pytester.runpytest("--clang-tidy")
@@ -73,7 +75,8 @@ def test_clang_tidy_args_forwarded(pytester):
     """Suppress the specific warning so the file passes despite the bug."""
     pytester.makeini(
         "[pytest]\n"
-        "clang_tidy_args = -checks=-*,clang-analyzer-*,-clang-analyzer-core.NullDereference --warnings-as-errors=*\n"
+        "clang_tidy_checks = -* clang-analyzer-* -clang-analyzer-core.NullDereference\n"
+        "clang_tidy_args = --warnings-as-errors=*\n"
     )
     pytester.makefile(".c", bad=C_ERROR)
     result = pytester.runpytest("--clang-tidy")
@@ -84,7 +87,7 @@ def test_warnings_emitted_on_pass(pytester):
     """When clang-tidy finds warnings but exits 0, they show as Python warnings."""
     pytester.makeini(
         "[pytest]\n"
-        "clang_tidy_args = -checks=-*,clang-analyzer-*\n"
+        "clang_tidy_checks = -* clang-analyzer-*\n"
     )
     pytester.makefile(".c", bad=C_ERROR)
     result = pytester.runpytest("--clang-tidy", "-W", "always::pytest_clang_tidy.plugin.ClangTidyWarning")
@@ -130,10 +133,25 @@ def test_cache_reruns_after_args_change(pytester):
     result.assert_outcomes(passed=1)
 
 
+def test_cache_reruns_after_checks_change(pytester):
+    pytester.makefile(".c", clean=C_CLEAN)
+    # First run
+    result = pytester.runpytest("--clang-tidy", "-p", "cacheprovider")
+    result.assert_outcomes(passed=1)
+    # Second run with different checks: re-checked
+    pytester.makeini(
+        "[pytest]\n"
+        "clang_tidy_checks = -* clang-analyzer-*\n"
+    )
+    result = pytester.runpytest("--clang-tidy", "-p", "cacheprovider")
+    result.assert_outcomes(passed=1)
+
+
 def test_cache_does_not_skip_failures(pytester):
     pytester.makeini(
         "[pytest]\n"
-        "clang_tidy_args = -checks=-*,clang-analyzer-* --warnings-as-errors=*\n"
+        "clang_tidy_checks = -* clang-analyzer-*\n"
+        "clang_tidy_args = --warnings-as-errors=*\n"
     )
     pytester.makefile(".c", bad=C_ERROR)
     # First run: fails

@@ -24,6 +24,12 @@ def pytest_addoption(parser):
         help="file extensions to collect for clang-tidy (default: .c .cpp .cc .cxx)",
     )
     parser.addini(
+        "clang_tidy_checks",
+        type="args",
+        default=[],
+        help="checks to enable (joined with commas and passed as -checks=...)",
+    )
+    parser.addini(
         "clang_tidy_args",
         type="args",
         default=[],
@@ -92,16 +98,21 @@ class ClangTidyItem(pytest.Item):
     def setup(self):
         mtimes = getattr(self.config, "_clang_tidy_mtimes", {})
         self._mtime = self.path.stat().st_mtime_ns
+        checks = self.config.getini("clang_tidy_checks")
         args = self.config.getini("clang_tidy_args")
         compiler_args = self.config.getini("clang_tidy_compiler_args")
         old = mtimes.get(str(self.path))
-        if old == [self._mtime, args, compiler_args]:
+        if old == [self._mtime, checks, args, compiler_args]:
             pytest.skip("previously passed clang-tidy")
 
     def runtest(self):
+        checks = self.config.getini("clang_tidy_checks")
         args = self.config.getini("clang_tidy_args")
         compiler_args = self.config.getini("clang_tidy_compiler_args")
-        cmd = [CLANG_TIDY_BIN, "--quiet", "--allow-no-checks"] + args + [str(self.path)]
+        cmd = [CLANG_TIDY_BIN, "--quiet", "--allow-no-checks"]
+        if checks:
+            cmd.append(f"-checks={','.join(checks)}")
+        cmd += args + [str(self.path)]
         if not _has_compile_commands(self.config):
             extra = []
             if self.config.getini("clang_tidy_include_python_headers"):
@@ -127,6 +138,7 @@ class ClangTidyItem(pytest.Item):
             self._mtime = getattr(self, "_mtime", self.path.stat().st_mtime_ns)
             self.config._clang_tidy_mtimes[str(self.path)] = [
                 self._mtime,
+                checks,
                 args,
                 compiler_args,
             ]
